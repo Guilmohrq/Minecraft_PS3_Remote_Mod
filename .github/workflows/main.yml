@@ -4,11 +4,17 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: bucanero/ps3dev:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build
-        run: make
+      
+      - name: Install PS3 SDK Toolchain
+        run: |
+          docker pull sstewartgallay/ps3dev:latest
+          
+      - name: Build with Docker
+        run: |
+          docker run --rm -v $(pwd):/src sstewartgallay/ps3dev:latest sh -c "cd /src && make"
+          
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
