@@ -1,0 +1,16 @@
+
+name: Build Mod
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: bucanero/ps3dev:latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: make
+      - name: Release
+        uses: actions/upload-artifact@v3
+        with:
+          name: MC_Remote_SPRX
+          path: ./*.sprx
