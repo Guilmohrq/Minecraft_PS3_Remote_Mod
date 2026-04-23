@@ -1,5 +1,1 @@
-
-TARGET = MC.sprx
-OBJS = src/main.o
-PS3DEV = /usr/local/ps3dev
-include $(PS3DEV)/makefiles/ppu_sprx.mk
+TARGET = MC.sprx\nOBJS = src/main.o\nPS3DEV = /usr/local/ps3dev\ninclude $(PS3DEV)/ppu/makefiles/ppu_sprx.mk
