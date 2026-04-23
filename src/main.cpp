@@ -6,7 +6,7 @@
 
 void write_mem(uint32_t address, uint32_t value) {
     uint32_t* addr = (uint32_t*)address;
-    *addr = value;
+    if(addr) *addr = value;
 }
 
 void server_thread(uint64_t arg) {
@@ -25,13 +25,16 @@ void server_thread(uint64_t arg) {
             char buffer[1024] = {0};
             read(new_socket, buffer, 1024);
             if (strstr(buffer, "god_on")) write_mem(0x00A7D354, 0x38000001);
+            if (strstr(buffer, "god_off")) write_mem(0x00A7D354, 0x900B0000);
             if (strstr(buffer, "items_on")) write_mem(0x001556C0, 0x60000000);
-            const char* res = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\nOK";
+            if (strstr(buffer, "items_off")) write_mem(0x001556C0, 0x4BFFFF01);
+            const char* res = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\nContent-Length: 2\r\n\r\nOK";
             send(new_socket, res, strlen(res), 0);
             close(new_socket);
         }
     }
 }
+
 extern "C" int module_start(uint64_t arg) {
     sys_ppu_thread_t tid;
     sys_ppu_thread_create(&tid, server_thread, 0, 1000, 4096, 0, "MC_Server");
